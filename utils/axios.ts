@@ -1,12 +1,13 @@
 import { Axios, AxiosRequestConfig, Method } from "axios";
 
-class Requests extends Axios {
+export default class Requests extends Axios {
     /**
      * 
      * @param baseURL - The base URL to send requests to
      * @param headers - The headers to send with the request
      */
-    constructor(baseURL: string , headers: any | undefined) {
+    constructor(baseURL: string , headers: any = {}) {
+        headers['Content-Type'] = 'application/json';
         super({ baseURL: baseURL , headers: headers ? headers : {} });
     }
 
@@ -18,12 +19,12 @@ class Requests extends Axios {
      * @param params - The query parameters to send in the request
      * @returns - The response from the server
      */
-    async sendRequest(url: string, method: Method, data: any, params: any) : Promise<any> {
+    async sendRequest(url: string, method: Method, data: any = undefined, params: any = undefined){
         const requestConfig : AxiosRequestConfig = {
             url: url,
             method: method,
-            data: method === "GET" ? undefined : data,
-            params: params
+            params: method === "GET" ? params : undefined,
+            data: method === "GET" ? undefined :  JSON.stringify(data)
         };
 
         console.log("Request Config:", requestConfig); // Add logging here
